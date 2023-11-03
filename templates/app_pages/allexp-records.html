@@ -1,0 +1,15 @@
+{% extends "copyfrom/main.html" %}
+
+{% block content %}
+
+<h2>All Expenditure Records</h2>
+
+{% if allexp %}
+{% for all in allexp %}
+
+{% endfor %}
+{% else %}
+<p>No Expenditure records found...!</p>
+{% endif %}
+
+{% endblock %}

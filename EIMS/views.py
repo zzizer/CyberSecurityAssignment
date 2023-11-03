@@ -8,6 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .models import Expenditure
 from django.contrib.auth import login, logout
+from .forms import ExpenditureForm
 
 def signin(request):
     if request.method == 'POST':
@@ -57,8 +58,13 @@ class UpdateExp(SuccessMessageMixin, UpdateView):
     success_message = "Expenditure was updated successfully"
 
 def allExpRecords(request):
-    return render(request, 'app_pages/allexp-records.html')
+    allexp = Expenditure.objects.all()
 
+    context = {
+        'allexp' : allexp,
+    }
+
+    return render(request, 'app_pages/allexp-records.html', context)
 
 def signout(request):
     logout(request)
