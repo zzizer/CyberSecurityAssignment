@@ -6,7 +6,11 @@
 
 {% if allexp %}
 {% for all in allexp %}
-
+<ul>
+    <li>
+        {{all}}
+    </li>
+</ul>
 {% endfor %}
 {% else %}
 <p>No Expenditure records found...!</p>
