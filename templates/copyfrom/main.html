@@ -22,13 +22,13 @@
                         <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Record Exp</a>
+                        <a class="nav-link" href="{% url 'create-exp' user.id %}">Record Exp</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">All Exp. Records</a>
+                        <a class="nav-link" href="{% url 'allExp-records' %}">All Exp. Records</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Logout</a>
+                        <a class="nav-link" href="{% url 'signout' %}">Logout</a>
                     </li>
                     {% else %}
                     <li class="nav-item">
@@ -39,6 +39,8 @@
             </div>
         </div>
     </nav>
+
+    {% include "copyfrom/alert.html" %}
 
     <div class="container py-5">
         {% block content %}
