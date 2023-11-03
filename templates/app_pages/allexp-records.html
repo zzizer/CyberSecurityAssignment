@@ -8,7 +8,7 @@
 {% for all in allexp %}
 <ul>
     <li>
-        {{all}}
+        {{all}} | <a class="text-decoration-none" href="{% url 'update-exp' all.id %}">Update-Exp</a> | <a class="text-decoration-none" href="{% url 'exp-details' all.id %}">Exp-details</a>
     </li>
 </ul>
 {% endfor %}

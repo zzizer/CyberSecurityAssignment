@@ -7,7 +7,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from .models import Expenditure
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from .forms import ExpenditureForm
 
 def signin(request):
@@ -20,7 +20,7 @@ def signin(request):
         if myUser is not None:
             login(request, myUser)
             messages.success(request, 'Successfully Logged In...!')
-            return redirect('home')
+            return redirect('dashboard')
 
         else:
             messages.error(request, 'Wrong Credentials...!')
@@ -52,8 +52,7 @@ class CreateExp(SuccessMessageMixin, CreateView):
 class UpdateExp(SuccessMessageMixin, UpdateView):
     model = Expenditure
     template_name = 'app_pages/update_exp.html'
-    # fields = ['Job_type','job_title', 'job_branch', 'uploaded_on', 
-    # 'deadline', 'description', 'qualifications']
+    fields = ['date','expense_category','vendor_payee','description','amount']
 
     success_message = "Expenditure was updated successfully"
 

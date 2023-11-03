@@ -136,7 +136,7 @@ MEDIA_URL = '/uploaded_data/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'static/uploaded_data')
 
-# AUTH_USER_MODEL = 'accounts.NewUser'
+AUTH_USER_MODEL = 'EIMS.NewUser'
 
 #email Settings
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

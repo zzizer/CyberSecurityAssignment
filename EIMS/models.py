@@ -8,15 +8,15 @@ import uuid
 
 class CustomAccountManager(BaseUserManager):
 
-    def create_personal(self, email, user_name, password, **other_fields):
+    def create_personal(self, email, username, password, **other_fields):
 
         other_fields.setdefault('is_verified', True)
         other_fields.setdefault('is_personal', True)
         other_fields.setdefault('is_active', True)
 
-        return self.create_user(email, user_name, password, **other_fields)
+        return self.create_user(email, username, password, **other_fields)
 
-    def create_superuser(self, email, user_name, password, **other_fields):
+    def create_superuser(self, email, username, password, **other_fields):
         other_fields.setdefault('is_staff', True)
         other_fields.setdefault('is_superuser', True)
         other_fields.setdefault('is_active', True)
@@ -33,11 +33,11 @@ class CustomAccountManager(BaseUserManager):
                 'Superuser must be assigned to is_superuser = True.'
             )
 
-        return self.create_user(email, user_name, password, **other_fields)
+        return self.create_user(email, username, password, **other_fields)
     
-    def create_user(self, email, user_name, password, **other_fields):
+    def create_user(self, email, username, password, **other_fields):
         email = self.normalize_email(email)
-        user = self.model(email=email, user_name=user_name, password=password, **other_fields)
+        user = self.model(email=email, username=username, password=password, **other_fields)
         
         user.set_password(password)
         user.save()
@@ -81,7 +81,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
 
 class Expenditure(models.Model):
     id = models.UUIDField(auto_created=True, primary_key=True, unique=True, editable=False, default=uuid.uuid4) 
-     uploaded_by = models.ForeignKey(NewUser, on_delete=models.CASCADE, blank=True, null=True)
+    uploaded_by = models.ForeignKey(NewUser, on_delete=models.CASCADE, blank=True, null=True)
     date = models.DateField()
     expense_category = models.CharField(max_length=255)
     vendor_payee = models.CharField(max_length=255)
@@ -90,3 +90,7 @@ class Expenditure(models.Model):
 
     def __str__(self):
         return f"{self.date} - {self.vendor_payee}"
+    
+    def get_absolute_url(self):
+        return reverse("allExp-records")
+    

@@ -4,4 +4,4 @@ from django import forms
 class ExpenditureForm(forms.ModelForm):
     class Meta:
         model = Expenditure
-        fields = '__all__'
+        fields = 'date','expense_category','vendor_payee','description','amount'
