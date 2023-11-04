@@ -6,14 +6,45 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from .models import Expenditure, NewUser
+from .models import Expenditure, NewUser, OTP
 from django.contrib.auth import login, logout, authenticate
 from .forms import ExpenditureForm
-from .models import OTP
 from .utils import generate_and_send_otp
 from django.contrib.auth.decorators import login_required
+from .validators import validate_password
 
-from django.contrib.auth import login
+def signup(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        username = request.POST['username']
+        givenname = request.POST['given_name']
+        surname = request.POST['surname']
+        password = request.POST['password']
+
+        # Check if the username meets the requirements
+        if not re.match(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,10}$', username):
+            messages.error(request, 'Invalid username. Username must be 8-10 characters and contain a mix of alpha-numeric characters.')
+            return redirect('signup')
+
+        # Validate the password
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            messages.error(request, e)
+            return redirect('signup')
+
+        # Create a new user using object.create
+        user = NewUser.objects.create_user(email=email, username=username, password=password)
+        user.givenname = givenname
+        user.surname = surname
+        user.save()
+
+        # Log in the new user
+        login(request, user)
+        messages.success(request, 'Signup successful!')
+        return redirect('dashboard')
+
+    return render(request, 'accounts/up.html')
 
 def signin(request):
     if request.method == 'POST':

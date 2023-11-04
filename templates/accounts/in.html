@@ -15,8 +15,18 @@
                 <label for="password">Password</label>
                 <input type="password" class="form-control" name="password" placeholder="Enter your password">
             </div>
-            <button type="submit" class="btn btn-primary mt-3">Login</button>
+            <button type="submit" class="btn btn-primary mt-3 mb-4">Login</button>
         </form>
+
+        <div class="row text-center">
+            <hr>
+            <div class="col-lg-6">
+                <a class="text-decoration-none" href="{% url 'signup' %}">Create an account...!</a>
+            </div>
+            <div class="col-lg-6">
+                <a class="text-decoration-none" href="#">Forgot Password...!</a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

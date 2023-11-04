@@ -4,6 +4,7 @@ from .views import ExpenditureinDetail, CreateExp, UpdateExp
 
 urlpatterns = [
     path('', views.signin, name='signin'),
+    path('signup', views.signup, name='signup'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('specific-expenditure/<str:pk>/', ExpenditureinDetail.as_view(), name = 'exp-details'),
     path('update-expenditure/<str:pk>/', UpdateExp.as_view(), name = 'update-exp'),
