@@ -15,15 +15,17 @@ def signin(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        myUser = authenticate(email=email, password=password)
+        myUser = authenticate(request, email=email, password=password)
 
         if myUser is not None:
             login(request, myUser)
+            myUser.failed_login_attempts = 0
+            myUser.save()
             messages.success(request, 'Successfully Logged In...!')
             return redirect('dashboard')
 
         else:
-            messages.error(request, 'Wrong Credentials...!')
+            messages.error(request, 'Invalid email or password.')
             return redirect('signin')
 
     context = {

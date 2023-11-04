@@ -52,6 +52,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     surname = models.CharField(max_length=100, blank=True)
     profile_photo = models.ImageField(blank=True, null=True)
     about_me = models.TextField(blank=True, null=True)
+    failed_login_attempts = models.IntegerField(default=0)
 
     #More Verification
     is_active = models.BooleanField(default=False)
