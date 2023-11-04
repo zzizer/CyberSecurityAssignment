@@ -95,3 +95,7 @@ class Expenditure(models.Model):
     def get_absolute_url(self):
         return reverse("allExp-records")
     
+class OTP(models.Model):
+    user = models.OneToOneField(NewUser, on_delete=models.CASCADE)
+    code = models.CharField(max_length=6)
+    created_at = models.DateTimeField(auto_now_add=True)

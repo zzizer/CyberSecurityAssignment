@@ -10,5 +10,6 @@ urlpatterns = [
     path('create-expenditure/<str:pk>/', CreateExp.as_view(), name = 'create-exp'),
     path('all-expenditure-records', views.allExpRecords, name='allexp'),
     path('signout', views.signout, name='signout'),
-    path('allExp-records', views.allExpRecords, name='allExp-records'),    
+    path('allExp-records', views.allExpRecords, name='allExp-records'),
+    path('otp-verification/', views.otp_verification, name='otp_verification'),    
 ]

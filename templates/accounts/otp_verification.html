@@ -1,0 +1,15 @@
+{% extends "copyfrom/main.html" %}
+
+{% block content %}
+
+<form method="post">
+    {% csrf_token %}
+    {% if error_message %}
+    <p>{{ error_message }}</p>
+    {% endif %}
+    <label for="otp">Enter OTP:</label>
+    <input type="text" name="otp" id="otp" required>
+    <button type="submit">Verify OTP</button>
+</form>
+
+{% endblock %}
