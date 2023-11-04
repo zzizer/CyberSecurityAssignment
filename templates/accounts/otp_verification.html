@@ -3,13 +3,15 @@
 {% block content %}
 
 <form method="post">
+    <h2>Check your email and enter the pin to continue</h2>
     {% csrf_token %}
     {% if error_message %}
     <p>{{ error_message }}</p>
     {% endif %}
     <label for="otp">Enter OTP:</label>
-    <input type="text" name="otp" id="otp" required>
-    <button type="submit">Verify OTP</button>
+    <input class="mt-3" type="text" name="otp" id="otp" required>
+    <br>
+    <button class="btn btn-primary mt-2" type="submit">Verify OTP</button>
 </form>
 
 {% endblock %}

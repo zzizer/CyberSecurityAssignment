@@ -1,5 +1,6 @@
 import secrets
 from django.core.mail import send_mail
+from .models import OTP
 
 def generate_and_send_otp(user):
     # Generate a 6-digit OTP.

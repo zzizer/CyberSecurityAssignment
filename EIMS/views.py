@@ -11,24 +11,9 @@ from django.contrib.auth import login, logout, authenticate
 from .forms import ExpenditureForm
 from .models import OTP
 from .utils import generate_and_send_otp
+from django.contrib.auth.decorators import login_required
 
-def otp_verification(request):
-    if request.method == 'POST':
-        entered_otp = request.POST.get('otp')
-        user = request.user
-        otp = OTP.objects.get(user=user)
-
-        if otp.code == entered_otp:
-            user.backend = 'django.contrib.auth.backends.ModelBackend'  # Set authentication backend.
-            login(request, user)  # Log in the user.
-            otp.delete()  # Delete the used OTP.
-            return redirect('dashboard')  # Redirect to the dashboard or the desired page.
-        else:
-            # Handle OTP verification failure.
-            return render(request, 'otp_verification.html', {'error_message': 'Invalid OTP'})
-
-    return render(request, 'otp_verification.html')
-    
+from django.contrib.auth import login
 
 def signin(request):
     if request.method == 'POST':
@@ -38,18 +23,10 @@ def signin(request):
         myUser = authenticate(request, email=email, password=password)
 
         if myUser is not None:
-            # Check if the user has an OTP verification pending
-            try:
-                user = NewUser.objects.get(email=email)
-                otp = OTP.objects.get(user=user)
-                return redirect('otp_verification')  # Redirect to OTP verification page
-            except OTP.DoesNotExist:
-                # No pending OTP verification, log in the user
-                login(request, myUser)
-                myUser.failed_login_attempts = 0
-                myUser.save()
-                messages.success(request, 'Successfully Logged In...!')
-                return redirect('dashboard')
+            # Generate and send OTP here
+            generate_and_send_otp(myUser)
+            login(request, myUser)
+            return redirect('otp_verification')  # Redirect to OTP verification page
 
         else:
             try:
@@ -71,10 +48,26 @@ def signin(request):
                 return redirect('signin')
 
     context = {
-        'messages': messages,
+        # 'messages': messages,
     }
     return render(request, 'accounts/in.html', context)
 
+@login_required
+def otp_verification(request):
+    if request.method == 'POST':
+        entered_otp = request.POST.get('otp')
+        user = request.user
+        otp = OTP.objects.get(user=user)
+
+        if otp.code == entered_otp:
+            login(request, user)
+            otp.delete()
+            return redirect('dashboard')  # Redirect to the dashboard or the desired page
+        else:
+            return render(request, 'otp_verification.html', {'error_message': 'Invalid OTP'})
+
+    return render(request, 'accounts/otp_verification.html')
+@login_required
 def dashboard(request):
     return render(request, 'app_pages/dashboard.html')
 
