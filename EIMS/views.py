@@ -37,6 +37,11 @@ def signup(request):
         user = NewUser.objects.create_user(email=email, username=username, password=password)
         user.givenname = givenname
         user.surname = surname
+
+        user.is_verified = True
+        user.is_active = True
+        user.is_personal = True
+        
         user.save()
 
         # Log in the new user
