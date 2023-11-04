@@ -20,12 +20,18 @@ def signin(request):
         email = request.POST['email']
         password = request.POST['password']
 
-        myUser = authenticate(request, email=email, password=password)
+        user = NewUser.objects.filter(email=email).first()
 
-        if myUser is not None:
-            # Generate and send OTP here
-            generate_and_send_otp(myUser)
-            login(request, myUser)
+        if user is not None and user.check_password(password):
+            if user.failed_login_attempts >= 3:
+                messages.error(request, 'Your account is blocked. Please contact the admin for further assistance.')
+                return redirect('signin')
+
+            # If the user enters the correct credentials, generate and send OTP
+            generate_and_send_otp(user)
+            user.failed_login_attempts = 0  # Reset login attempts to zero
+            user.save()
+            login(request, user)
             return redirect('otp_verification')  # Redirect to OTP verification page
 
         else:
@@ -39,17 +45,17 @@ def signin(request):
                     user.save()
                     messages.error(request, 'Your account is blocked. Please contact the admin for further assistance.')
                 else:
-                    # Generate and send OTP here
-                    generate_and_send_otp(user)
-                    return redirect('otp_verification')  # Redirect to OTP verification page
+                    if user.failed_login_attempts == 2:
+                        messages.error(request, 'Invalid email or password. One more incorrect attempt will result in blocking your account.')
+                    else:
+                        messages.error(request, 'Invalid email or password.')
+                return redirect('signin')
 
             except NewUser.DoesNotExist:
                 messages.error(request, 'Invalid email or password.')
                 return redirect('signin')
 
-    context = {
-        # 'messages': messages,
-    }
+    context = {}
     return render(request, 'accounts/in.html', context)
 
 @login_required
