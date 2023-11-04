@@ -14,7 +14,7 @@ SECRET_KEY = 'django-insecure-d^d*dxbox+29i!_bu3hcg5rd5g8-ip9!tvooj*u=ykt6+s!-8u
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'EIMS',
     'crispy_forms',
     "crispy_bootstrap5",
+    'django_extensions',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -150,3 +151,20 @@ AUTH_USER_MODEL = 'EIMS.NewUser'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+DEBUG = True
+
+if DEBUG:
+    INSTALLED_APPS += ['sslserver']
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
+
+    SSL_CERTIFICATE = 'localhost.crt'
+    SSL_KEY = 'localhost.key'
+
+
+SSL_CERTIFICATE = 'localhost.crt'
+SSL_KEY = 'localhost.key'
