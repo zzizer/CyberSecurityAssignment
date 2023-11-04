@@ -10,8 +10,10 @@ from .models import Expenditure, NewUser, OTP
 from django.contrib.auth import login, logout, authenticate
 from .forms import ExpenditureForm
 from .utils import generate_and_send_otp
+import re
 from django.contrib.auth.decorators import login_required
 from .validators import validate_password
+from django.core.exceptions import ValidationError
 
 def signup(request):
     if request.method == 'POST':
@@ -41,7 +43,7 @@ def signup(request):
         user.is_verified = True
         user.is_active = True
         user.is_personal = True
-        
+
         user.save()
 
         # Log in the new user
