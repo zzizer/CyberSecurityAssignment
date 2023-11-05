@@ -1,0 +1,15 @@
+{% extends "copyfrom/main.html" %}
+
+{% block content %}
+
+<h2>My Profile</h2>
+
+<hr>
+
+Username: {{thisuser.username}} <br> <br> 
+Email: {{thisuser.email}} <br><br>
+ID: {{thisuser.id}} <br> <br>
+First name: {{thisuser.givenname}} <br> <br>
+Surname: {{thisuser.surname}} <br> <br>
+
+{% endblock %}

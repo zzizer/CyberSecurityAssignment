@@ -4,6 +4,7 @@
   ],
   "hints": {
     "meta-viewport": "off",
-    "axe/structure": "off"
+    "axe/structure": "off",
+    "no-inline-styles": "off"
   }
 }

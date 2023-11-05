@@ -3,5 +3,9 @@
 {% block content %}
 
 <h2>Dashboard</h2>
+ 
+<hr>
+
+<p class="text-muted fs-3">Hello <a class="text-decoration-none" href="{% url 'profile' user.id %}">@{{user.username}}</a>,</p>
 
 {% endblock %}

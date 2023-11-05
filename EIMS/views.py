@@ -17,6 +17,15 @@ from .validators import validate_password
 from django.core.exceptions import ValidationError
 from django.contrib.auth.views import PasswordChangeView, PasswordChangeForm
 
+def profile(request, id):
+    this_user = NewUser.objects.get(id=id)
+
+    context = {
+        'thisuser':this_user,
+    }    
+
+    return render(request, 'accounts/profile.html', context)
+
 class PasswordsChangeView(LoginRequiredMixin, SuccessMessageMixin, PasswordChangeView):
     form_class = PasswordChangeForm
     success_url = reverse_lazy('dashboard')
