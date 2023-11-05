@@ -11,9 +11,11 @@ from django.contrib.auth import login, logout, authenticate
 from .forms import ExpenditureForm
 from .utils import generate_and_send_otp
 import re
+from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from .validators import validate_password
 from django.core.exceptions import ValidationError
+from django.contrib.auth.views import PasswordChangeView, PasswordChangeForm
 
 class PasswordsChangeView(LoginRequiredMixin, SuccessMessageMixin, PasswordChangeView):
     form_class = PasswordChangeForm
