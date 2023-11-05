@@ -15,6 +15,13 @@ from django.contrib.auth.decorators import login_required
 from .validators import validate_password
 from django.core.exceptions import ValidationError
 
+class PasswordsChangeView(LoginRequiredMixin, SuccessMessageMixin, PasswordChangeView):
+    form_class = PasswordChangeForm
+    success_url = reverse_lazy('dashboard')
+
+    success_message = "Password successfully changed...!"
+    login_url = 'signin'
+
 def signup(request):
     if request.method == 'POST':
         email = request.POST['email']
