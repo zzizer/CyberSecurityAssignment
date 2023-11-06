@@ -32,6 +32,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     "crispy_bootstrap5",
     'django_extensions',
+
+    'social_django',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -46,6 +48,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = (
+    # ...
+    'social_core.backends.google.GoogleOAuth2',
+    # ...
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '866972531477-6f8qp5mvvpjnien87oejb5vhdci4bgis.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+LOGIN_URL = 'signin'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_URL = 'signout'
 
 ROOT_URLCONF = 'core.urls'
 

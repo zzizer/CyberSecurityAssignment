@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
 from .views import ExpenditureinDetail, CreateExp, UpdateExp, PasswordsChangeView
 from django.contrib.auth import views as auth_views
@@ -35,4 +35,6 @@ urlpatterns = [
     path('reset_password_complete/', 
     auth_views.PasswordResetCompleteView.as_view(template_name='accounts/password_reset_complete.html'), 
     name='password_reset_complete'),
+
+    path('auth/', include('social_django.urls', namespace='social')),
 ]
