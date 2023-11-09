@@ -5,6 +5,7 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from datetime import date
 import uuid
+from django.core.exceptions import ValidationError
 
 class CustomAccountManager(BaseUserManager):
 
@@ -53,6 +54,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     profile_photo = models.ImageField(blank=True, null=True)
     about_me = models.TextField(blank=True, null=True)
     failed_login_attempts = models.IntegerField(default=0)
+    date_joined = models.DateTimeField(default=timezone.now)
 
     #More Verification
     is_active = models.BooleanField(default=False)
@@ -60,7 +62,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     is_personal = models.BooleanField(default=False)
     is_verified = models.BooleanField(default=False)
-
+    
     objects = CustomAccountManager()
 
     USERNAME_FIELD = 'email'
@@ -79,6 +81,29 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     
     class Meta:
         verbose_name  = 'New Account / User'
+    
+
+    expiration_days = 90  # Adjust this based on your requirements
+
+    @property
+    def days_until_password_expires(self):
+        if self.date_joined:
+            expiration_date = self.date_joined + timezone.timedelta(days=self.expiration_days)
+            days_left = (expiration_date - timezone.now()).days
+            return max(0, days_left)  # Ensure it's non-negative
+        return 0
+
+    @property
+    def days_left_for_password_to_expire(self):
+        return self.days_until_password_expires
+
+    def password_has_expired(self):
+        return self.days_until_password_expires == 0
+
+    def clean(self):
+        super().clean()
+        if self.password_has_expired():
+            raise ValidationError("Password has expired. Please reset your password.")
 
 class Expenditure(models.Model):
     id = models.UUIDField(auto_created=True, primary_key=True, unique=True, editable=False, default=uuid.uuid4) 

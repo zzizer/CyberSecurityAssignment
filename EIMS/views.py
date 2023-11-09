@@ -22,6 +22,7 @@ def profile(request, id):
 
     context = {
         'thisuser':this_user,
+        'days_left_for_password_to_expire': this_user.days_left_for_password_to_expire,
     }    
 
     return render(request, 'accounts/profile.html', context)
@@ -71,6 +72,7 @@ def signup(request):
 
     return render(request, 'accounts/up.html')
 
+
 def signin(request):
     if request.method == 'POST':
         email = request.POST['email']
@@ -87,6 +89,11 @@ def signin(request):
             generate_and_send_otp(user)
             user.failed_login_attempts = 0  # Reset login attempts to zero
             user.save()
+            
+            if user.password_has_expired():
+                messages.warning(request, 'Your password has expired. Please reset your password.')
+                return redirect('password_reset')  # Redirect to the password reset page
+
             login(request, user)
             return redirect('otp_verification')  # Redirect to OTP verification page
 
@@ -105,14 +112,23 @@ def signin(request):
                         messages.error(request, 'Invalid email or password. One more incorrect attempt will result in blocking your account.')
                     else:
                         messages.error(request, 'Invalid email or password.')
+                
+                # Retrieve the days left for password to expire
+                days_left_for_password_to_expire = user.days_left_for_password_to_expire
+                messages.info(request, f'Days left for password to expire: {days_left_for_password_to_expire} days')
+
                 return redirect('signin')
 
             except NewUser.DoesNotExist:
                 messages.error(request, 'Invalid email or password.')
                 return redirect('signin')
 
-    context = {}
+    context = {
+
+    }
+
     return render(request, 'accounts/in.html', context)
+
 
 @login_required
 def otp_verification(request):
