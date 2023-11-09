@@ -11,12 +11,12 @@ cryptography==41.0.5
 Django
 django-bootstrap-v5==1.0.11
 django-bootstrap5==23.1
-django-crispy-forms==2.0
-django-cryptographic-fields==0.5.1
 django-extensions==3.2.3
 django-sslserver==0.22
 filterpy==1.4.5
-fqdn==1.5.1
+fqdngo-crispy-forms==2.0
+django-cryptographic-fields==0.5.1
+djan==1.5.1
 gunicorn==20.1.0
 psycopg2-binary==2.9.6
 requests==2.31.0
