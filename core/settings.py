@@ -168,18 +168,18 @@ EMAIL_HOST_PASSWORD = 'nowfvrrjzkdnxakw'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-# DEBUG = True
+DEBUG = True
 
-# if DEBUG:
-#     INSTALLED_APPS += ['sslserver']
-#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-#     SESSION_COOKIE_SECURE = True
-#     CSRF_COOKIE_SECURE = True
-#     SECURE_SSL_REDIRECT = True
+if DEBUG:
+    INSTALLED_APPS += ['sslserver']
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_SSL_REDIRECT = True
 
-#     SSL_CERTIFICATE = 'localhost.crt'
-#     SSL_KEY = 'localhost.key'
+    SSL_CERTIFICATE = 'localhost.crt'
+    SSL_KEY = 'localhost.key'
 
 
-# SSL_CERTIFICATE = 'localhost.crt'
-# SSL_KEY = 'localhost.key'
+SSL_CERTIFICATE = 'localhost.crt'
+SSL_KEY = 'localhost.key'
