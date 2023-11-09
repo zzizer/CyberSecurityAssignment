@@ -6,6 +6,7 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('', views.signin, name='signin'),
     path('signup', views.signup, name='signup'),
+    # path('password_reset', views.password_reset, name='password_reset'),
     path('dashboard', views.dashboard, name='dashboard'),
     path('profile-of-/<str:id>/', views.profile, name='profile'),
     path('specific-expenditure/<str:pk>/', ExpenditureinDetail.as_view(), name = 'exp-details'),
@@ -37,4 +38,8 @@ urlpatterns = [
     name='password_reset_complete'),
 
     path('auth/', include('social_django.urls', namespace='social')),
+
+    path('password-reset/', views.password_reset, name='password_reset'),
+    path('password-reset-confirm/<str:uidb64>/<str:token>/', views.password_reset_confirm, name='password_reset_confirm'),
+    path('set-new-password/', views.set_new_password, name='set_new_password'),
 ]
