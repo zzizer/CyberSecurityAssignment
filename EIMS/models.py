@@ -7,6 +7,11 @@ from datetime import date
 import uuid
 from django.core.exceptions import ValidationError
 
+class PasswordHistory(models.Model):
+    user = models.ForeignKey('NewUser', on_delete=models.CASCADE)
+    hashed_password = models.CharField(max_length=128)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
 class CustomAccountManager(BaseUserManager):
 
     def create_personal(self, email, username, password, **other_fields):
@@ -42,7 +47,16 @@ class CustomAccountManager(BaseUserManager):
         
         user.set_password(password)
         user.save()
+        
+        # Save the password history
+        self._save_password_history(user, password)
+
         return user
+    
+    def _save_password_history(self, user, password):
+        # Save the hashed password in the PasswordHistory model
+        history_entry = PasswordHistory(user=user, hashed_password=user.password)
+        history_entry.save()
 
 class NewUser(AbstractBaseUser, PermissionsMixin):
     id = models.UUIDField(auto_created=True, primary_key=True, unique=True, editable=False, default=uuid.uuid4)
@@ -81,6 +95,26 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     
     class Meta:
         verbose_name  = 'New Account / User'
+
+    def save(self, *args, **kwargs):
+        # Save the current password to the password history before changing it
+        if self.pk:
+            last_password_entry = PasswordHistory.objects.filter(user=self).order_by('-created_at').first()
+            if last_password_entry and last_password_entry.hashed_password != self.password:
+                self._save_password_history(self.password)
+
+        super().save(*args, **kwargs)
+
+    def _save_password_history(self, password):
+        history_entry = PasswordHistory(user=self, hashed_password=self.password)
+        history_entry.save()
+
+    def validate_password_change(self, new_password):
+        # Validate that the new password is not one of the last 10 passwords
+        history_entries = PasswordHistory.objects.filter(user=self).order_by('-created_at')[:10]
+        for entry in history_entries:
+            if entry.hashed_password == make_password(new_password):
+                raise ValidationError("Cannot use the same password as one of the last 10 passwords.")
     
 
     expiration_days = 90  # Adjust this based on your requirements
