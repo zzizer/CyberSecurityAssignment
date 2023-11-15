@@ -6,6 +6,7 @@ from django.urls import reverse
 from datetime import date
 import uuid
 from django.core.exceptions import ValidationError
+from django.contrib.auth.hashers import make_password
 
 class PasswordHistory(models.Model):
     user = models.ForeignKey('NewUser', on_delete=models.CASCADE)
@@ -45,17 +46,19 @@ class CustomAccountManager(BaseUserManager):
         email = self.normalize_email(email)
         user = self.model(email=email, username=username, password=password, **other_fields)
         
+        # Save the hashed password in the PasswordHistory model
+        self._save_password_history(user, password)
+
         user.set_password(password)
         user.save()
-        
-        # Save the password history
-        self._save_password_history(user, password)
+
+        user.save()     
 
         return user
     
     def _save_password_history(self, user, password):
         # Save the hashed password in the PasswordHistory model
-        history_entry = PasswordHistory(user=user, hashed_password=user.password)
+        history_entry = PasswordHistory(user=user, hashed_password=make_password(password))
         history_entry.save()
 
 class NewUser(AbstractBaseUser, PermissionsMixin):

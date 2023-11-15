@@ -97,6 +97,11 @@ def password_reset(request):
 def profile(request, id):
     this_user = NewUser.objects.get(id=id)
 
+    user = request.user
+
+    if OTP.objects.filter(user=user).exists():
+        return redirect('otp_verification')
+
     context = {
         'thisuser':this_user,
         'days_left_for_password_to_expire': this_user.days_left_for_password_to_expire,
@@ -222,8 +227,14 @@ def otp_verification(request):
             return render(request, 'otp_verification.html', {'error_message': 'Invalid OTP'})
 
     return render(request, 'accounts/otp_verification.html')
+
 @login_required
 def dashboard(request):
+    user = request.user
+
+    if OTP.objects.filter(user=user).exists():
+        return redirect('otp_verification')
+
     return render(request, 'app_pages/dashboard.html')
 
 class ExpenditureinDetail(DetailView):
@@ -249,6 +260,11 @@ class UpdateExp(SuccessMessageMixin, UpdateView):
     success_message = "Expenditure was updated successfully"
 
 def allExpRecords(request):
+    user = request.user
+
+    if OTP.objects.filter(user=user).exists():
+        return redirect('otp_verification')
+
     allexp = Expenditure.objects.all()
 
     context = {
