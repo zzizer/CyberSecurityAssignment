@@ -42,7 +42,7 @@ def set_new_password(request):
     else:
         form = SetNewPasswordForm(request.user)
 
-    return render(request, 'set_new_password.html', {'form': form})
+    return render(request, 'accounts/set_new_password.html', {'form': form})
 
 def password_reset_confirm(request, uidb64, token):
     try:
@@ -85,13 +85,13 @@ def password_reset(request):
                 send_mail(subject, message, from_email, to_email)
 
                 messages.success(request, 'Check your email for the password reset link.')
-                return redirect('login')
+                return redirect('signin')
             else:
                 messages.error(request, 'No user with that email address.')
     else:
         form = PasswordResetForm()
 
-    return render(request, 'password_reset.html', {'form': form})
+    return render(request, 'accounts/password_reset.html', {'form': form})
 
 
 def profile(request, id):
