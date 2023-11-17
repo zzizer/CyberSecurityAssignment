@@ -35,6 +35,8 @@ INSTALLED_APPS = [
 
 
     'social_django',
+    'defender',
+    'easyaudit',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -48,6 +50,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    'defender.middleware.FailedLoginMiddleware',
+    'easyaudit.middleware.easyaudit.EasyAuditMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = (
@@ -63,6 +68,8 @@ LOGIN_REDIRECT_URL = 'dashboard'
 LOGOUT_URL = 'signout'
 
 ROOT_URLCONF = 'core.urls'
+
+DEFENDER_REDIS_URL = "redis://127.0.0.1:6379/1"
 
 TEMPLATES = [
     {
@@ -86,13 +93,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -100,7 +100,11 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'abc123ABC.',
         'PORT': '5432',
-    }
+    },
+    'sqlite': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    },
 }
 
 
