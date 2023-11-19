@@ -4,10 +4,10 @@ from .views import ExpenditureinDetail, CreateExp, UpdateExp, PasswordsChangeVie
 from django.contrib.auth import views as auth_views
 
 urlpatterns = [
-    path('', views.signin, name='signin'),
+    path('signin', views.signin, name='signin'),
     path('signup', views.signup, name='signup'),
     # path('password_reset', views.password_reset, name='password_reset'),
-    path('dashboard', views.dashboard, name='dashboard'),
+    path('', views.dashboard, name='dashboard'),
     path('profile-of-/<str:id>/', views.profile, name='profile'),
     path('specific-expenditure/<str:pk>/', ExpenditureinDetail.as_view(), name = 'exp-details'),
     path('update-expenditure/<str:pk>/', UpdateExp.as_view(), name = 'update-exp'),
@@ -29,7 +29,7 @@ urlpatterns = [
     auth_views.PasswordResetDoneView.as_view(template_name='accounts/password_reset_sent.html'), 
     name='password_reset_done'),
     #3
-    path('reset/<uidb64>/<token>/', 
+    path('user-reset/<uidb64>/<token>/', 
     auth_views.PasswordResetConfirmView.as_view(template_name='accounts/password_reset_confirm.html'), 
     name='password_reset_confirm'),
     #4
@@ -40,6 +40,6 @@ urlpatterns = [
     path('auth/', include('social_django.urls', namespace='social')),
 
     path('password-reset/', views.password_reset, name='password_reset'),
-    path('password-reset-confirm/<str:uidb64>/<str:token>/', views.password_reset_confirm, name='password_reset_confirm'),
+    path('password-reset-confirmed/<str:uidb64>/<str:token>/', views.password_reset_confirm, name='password_reset_confirmed'),
     path('set-new-password/', views.set_new_password, name='set_new_password'),
 ]

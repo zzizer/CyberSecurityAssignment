@@ -13,6 +13,9 @@ class PasswordHistory(models.Model):
     hashed_password = models.CharField(max_length=128)
     created_at = models.DateTimeField(auto_now_add=True)
     
+    def __str__(self):
+        return f"Pass-code history for {self.user.email}"
+    
 class CustomAccountManager(BaseUserManager):
 
     def create_personal(self, email, username, password, **other_fields):
@@ -44,18 +47,20 @@ class CustomAccountManager(BaseUserManager):
     
     def create_user(self, email, username, password, **other_fields):
         email = self.normalize_email(email)
-        user = self.model(email=email, username=username, password=password, **other_fields)
-        
+        user = self.model(email=email, username=username, **other_fields)
+
+        # Save the user instance first
+        user.save()
+
         # Save the hashed password in the PasswordHistory model
         self._save_password_history(user, password)
 
+        # Set the hashed password using set_password after saving the user
         user.set_password(password)
         user.save()
 
-        user.save()     
-
         return user
-    
+
     def _save_password_history(self, user, password):
         # Save the hashed password in the PasswordHistory model
         history_entry = PasswordHistory(user=user, hashed_password=make_password(password))
@@ -103,22 +108,23 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
         # Save the current password to the password history before changing it
         if self.pk:
             last_password_entry = PasswordHistory.objects.filter(user=self).order_by('-created_at').first()
-            if last_password_entry and last_password_entry.hashed_password != self.password:
+            if last_password_entry and last_password_entry.hashed_password != make_password(self.password):
                 self._save_password_history(self.password)
 
         super().save(*args, **kwargs)
 
     def _save_password_history(self, password):
-        history_entry = PasswordHistory(user=self, hashed_password=self.password)
+        # Save the hashed password in the PasswordHistory model
+        history_entry = PasswordHistory(user=self, hashed_password=make_password(password))
         history_entry.save()
 
     def validate_password_change(self, new_password):
         # Validate that the new password is not one of the last 10 passwords
         history_entries = PasswordHistory.objects.filter(user=self).order_by('-created_at')[:10]
         for entry in history_entries:
-            if entry.hashed_password == make_password(new_password):
+            if check_password(new_password, entry.hashed_password):
                 raise ValidationError("Cannot use the same password as one of the last 10 passwords.")
-    
+
 
     expiration_days = 90  # Adjust this based on your requirements
 

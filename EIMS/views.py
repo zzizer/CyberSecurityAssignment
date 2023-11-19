@@ -56,10 +56,10 @@ def password_reset_confirm(request, uidb64, token):
             return redirect('set_new_password')
         else:
             messages.error(request, 'Invalid or expired token.')
-            return redirect('login')
+            return redirect('signin')
     except (TypeError, ValueError, OverflowError, NewUser.DoesNotExist):
         messages.error(request, 'Invalid user or token.')
-        return redirect('login')
+        return redirect('signin')
 
 def password_reset(request):
     if request.method == 'POST':
@@ -74,7 +74,7 @@ def password_reset(request):
 
                 # Create a link with the token
                 uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
-                reset_link = f"{request.scheme}://{request.get_host()}/password-reset-confirm/{uidb64}/{token}/"
+                reset_link = f"{request.scheme}://{request.get_host()}/password-reset-confirmed/{uidb64}/{token}/"
 
                 # Send the link to the user via email
                 subject = 'Password Reset Link'
@@ -241,7 +241,7 @@ class ExpenditureinDetail(DetailView):
     model = Expenditure
     template_name = 'app_pages/expenditure-in-details.html'
 
-class CreateExp(SuccessMessageMixin, CreateView):
+class CreateExp(LoginRequiredMixin,SuccessMessageMixin, CreateView):
     model = Expenditure
     form_class = ExpenditureForm
     template_name = "app_pages/new-exp.html"
@@ -252,13 +252,16 @@ class CreateExp(SuccessMessageMixin, CreateView):
         ExpenditureForm.instance.uploaded_by = self.request.user
         return super().form_valid(ExpenditureForm)
 
-class UpdateExp(SuccessMessageMixin, UpdateView):
+class UpdateExp(LoginRequiredMixin,SuccessMessageMixin, UpdateView):
     model = Expenditure
     template_name = 'app_pages/update_exp.html'
     fields = ['date','expense_category','vendor_payee','description','amount']
 
     success_message = "Expenditure was updated successfully"
 
+    login_url = 'signin'
+
+@login_required(login_url='signin')
 def allExpRecords(request):
     user = request.user
 
@@ -273,6 +276,7 @@ def allExpRecords(request):
 
     return render(request, 'app_pages/allexp-records.html', context)
 
+@login_required(login_url='signin')
 def signout(request):
     logout(request)
     messages.success(request, 'Logged out successfully...!')
