@@ -2,7 +2,24 @@
 
 {% block content %}
 
-<h2>Details for {{object.id}}</h2>
-Happened at {{object.date}}
+<h1>Details for {{object.id}}</h1>
+
+<h6>Initiated by</h6> 
+<p>{{object.uploaded_by.username}}</p>
+
+<h6>Happened on</h6> 
+<p>{{object.date}}</p>
+
+<h6>Expense category</h6> 
+<p>{{object.expense_category}}</p>
+
+<h6>Vendor payee</h6> 
+<p>{{object.vendor_payee}}</p>
+
+<h6>Description</h6> 
+<p>{{object.description}}</p>
+
+<h6>Amount spent</h6> 
+<p>{{object.amount}}</p>
 
 {% endblock %}

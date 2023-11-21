@@ -141,7 +141,7 @@ def signup(request):
         user.givenname = givenname
         user.surname = surname
 
-        user.is_verified = True
+        user.is_verified = False
         user.is_active = True
         user.is_personal = True
 
@@ -237,9 +237,11 @@ def dashboard(request):
 
     return render(request, 'app_pages/dashboard.html')
 
-class ExpenditureinDetail(DetailView):
+class ExpenditureinDetail(LoginRequiredMixin, DetailView):
     model = Expenditure
     template_name = 'app_pages/expenditure-in-details.html'
+
+    login_url = 'signin'
 
 class CreateExp(LoginRequiredMixin,SuccessMessageMixin, CreateView):
     model = Expenditure

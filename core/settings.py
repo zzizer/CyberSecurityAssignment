@@ -100,7 +100,7 @@ DATABASES = {
         'USER': 'postgres',
         'PASSWORD': 'abc123ABC.',
         'PORT': '5432',
-    },
+    }, 
     'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
@@ -187,3 +187,7 @@ if DEBUG:
 
 SSL_CERTIFICATE = 'localhost.crt'
 SSL_KEY = 'localhost.key'
+
+# SESSION_COOKIE_AGE = 10
+# SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+# SESSION_SAVE_EVERY_REQUEST = True
