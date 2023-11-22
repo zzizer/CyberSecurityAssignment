@@ -8,9 +8,42 @@
 {% for all in allexp %}
 <ul>
     <li>
-        {{all}} {% if user.is_verified %}
-        | <a class="text-decoration-none" href="{% url 'update-exp' all.id %}">Update-Exp</a>
-        {% endif %}  | <a class="text-decoration-none" href="{% url 'exp-details' all.id %}">Exp-details</a>
+        {{all}} 
+        
+        | <a class="btn btn-info" href="{% url 'exp-details' all.id %}">Exp-details</a>
+
+        {% if user.is_verified %}
+
+        | <a type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Update
+        </a> <br> <br>
+          
+          <!-- Modal -->
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Enter Access code to continue:</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      <label for="amount" class="form-label">Access code: </label>
+                      <input type="password" class="form-control" id="password" name="access_code" placeholder="Enter Access Code">
+                      <input class="mt-4 btn btn-primary" type="submit" value="Submit">
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        {% endif %}  
+        
     </li>
 </ul>
 {% endfor %}

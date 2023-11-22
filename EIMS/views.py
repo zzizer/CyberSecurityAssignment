@@ -232,6 +232,16 @@ def otp_verification(request):
 def dashboard(request):
     user = request.user
 
+    if request.method == 'POST':
+        submitted_access_code = request.POST['access_code']
+
+        if submitted_access_code == user.access_code:
+            messages.success(request, 'Access code verified successfully.')
+            return redirect('create-exp')
+        else:
+            messages.error(request, 'Invalid access code.')
+            return redirect('dashboard')
+
     if OTP.objects.filter(user=user).exists():
         return redirect('otp_verification')
 
@@ -266,6 +276,18 @@ class UpdateExp(LoginRequiredMixin,SuccessMessageMixin, UpdateView):
 @login_required(login_url='signin')
 def allExpRecords(request):
     user = request.user
+
+    user = request.user
+
+    if request.method == 'POST':
+        submitted_access_code = request.POST['access_code']
+
+        if submitted_access_code == user.access_code:
+            messages.success(request, 'Access code verified successfully.')
+            return redirect('update-exp')
+        else:
+            messages.error(request, 'Invalid access code.')
+            return redirect('dashboard')
 
     if OTP.objects.filter(user=user).exists():
         return redirect('otp_verification')

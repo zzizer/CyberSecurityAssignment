@@ -77,6 +77,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
     about_me = models.TextField(blank=True, null=True)
     failed_login_attempts = models.IntegerField(default=0)
     date_joined = models.DateTimeField(default=timezone.now)
+    access_code = models.CharField(max_length=6, blank=True, null=True)
 
     #More Verification
     is_active = models.BooleanField(default=False)

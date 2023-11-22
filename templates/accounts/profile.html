@@ -15,4 +15,8 @@ Surname: {{thisuser.surname}} <br> <br>
 <hr>
 Number of days left for the password to expire: {{days_left_for_password_to_expire}} <br> <br>
 
+<hr>
+
+<a class="btn btn-primary" href="{% url 'change-password' %}">Change password</a>
+
 {% endblock %}
