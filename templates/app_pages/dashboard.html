@@ -26,13 +26,14 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form method="post">
+          <form method="post" action="{% url 'dashboard' %}?record_id={{ user.id }}">
             {% csrf_token %}
             <div class="mb-3">
-              <label for="amount" class="form-label">Access code: </label>
-              <input type="password" class="form-control" id="password" name="access_code" placeholder="Enter Access Code">
-              <input class="mt-4 btn btn-primary" type="submit" value="Submit">
-          </form>
+                <label for="password" class="form-label">Access code: </label>
+                <input type="password" class="form-control" id="password" name="access_code" placeholder="Enter Access Code">
+                <input class="mt-4 btn btn-primary" type="submit" value="Submit">
+            </div>
+        </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

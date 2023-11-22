@@ -233,14 +233,17 @@ def dashboard(request):
     user = request.user
 
     if request.method == 'POST':
-        submitted_access_code = request.POST['access_code']
+        submitted_access_code = request.POST.get('access_code')
+        record_id = request.GET.get('record_id')
 
         if submitted_access_code == user.access_code:
             messages.success(request, 'Access code verified successfully.')
-            return redirect('create-exp')
+
+            # Redirect to 'update-exp' with the id of the specific record
+            return redirect('create-exp', pk=record_id)
         else:
             messages.error(request, 'Invalid access code.')
-            return redirect('dashboard')
+            return redirect('allexp')
 
     if OTP.objects.filter(user=user).exists():
         return redirect('otp_verification')
@@ -277,17 +280,18 @@ class UpdateExp(LoginRequiredMixin,SuccessMessageMixin, UpdateView):
 def allExpRecords(request):
     user = request.user
 
-    user = request.user
-
     if request.method == 'POST':
-        submitted_access_code = request.POST['access_code']
+        submitted_access_code = request.POST.get('access_code')
+        record_id = request.GET.get('record_id')
 
         if submitted_access_code == user.access_code:
             messages.success(request, 'Access code verified successfully.')
-            return redirect('update-exp')
+
+            # Redirect to 'update-exp' with the id of the specific record
+            return redirect('update-exp', pk=record_id)
         else:
             messages.error(request, 'Invalid access code.')
-            return redirect('dashboard')
+            return redirect('allexp')
 
     if OTP.objects.filter(user=user).exists():
         return redirect('otp_verification')
@@ -295,7 +299,7 @@ def allExpRecords(request):
     allexp = Expenditure.objects.all()
 
     context = {
-        'allexp' : allexp,
+        'allexp': allexp,
     }
 
     return render(request, 'app_pages/allexp-records.html', context)
