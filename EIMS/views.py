@@ -260,7 +260,7 @@ def dashboard(request):
             return redirect('create-exp', pk=record_id)
         else:
             messages.error(request, 'Invalid access code.')
-            return redirect('allexp')
+            return redirect('dashboard')
 
     if OTP.objects.filter(user=user).exists():
         return redirect('otp_verification')
