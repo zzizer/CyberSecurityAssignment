@@ -172,9 +172,9 @@ EMAIL_HOST_PASSWORD = 'nowfvrrjzkdnxakw'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-DEBUG = True
+DEBUG = False
 
-if DEBUG:
+if DEBUG == False:
     INSTALLED_APPS += ['sslserver']
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
     SESSION_COOKIE_SECURE = True
