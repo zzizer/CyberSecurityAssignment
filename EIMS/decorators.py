@@ -2,6 +2,8 @@
 from functools import wraps
 from django.shortcuts import redirect, render
 from django.contrib import messages
+import random
+import string
 
 # Decorator to check password expiry
 def check_password_expiry(view_func):
@@ -17,3 +19,7 @@ def check_password_expiry(view_func):
         return view_func(request, *args, **kwargs)
 
     return _wrapped_view
+
+def generate_access_code():
+    characters = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(random.choices(characters, k=6))

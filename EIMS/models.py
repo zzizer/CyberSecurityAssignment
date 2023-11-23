@@ -127,7 +127,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
                 raise ValidationError("Cannot use the same password as one of the last 10 passwords.")
 
 
-    expiration_days = 3
+    expiration_days = 90
 
     def set_password(self, raw_password):
         # Override the set_password method to update the date_joined when the password is changed

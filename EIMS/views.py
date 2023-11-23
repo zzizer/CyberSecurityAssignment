@@ -28,7 +28,8 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
-from .decorators import check_password_expiry
+from .decorators import check_password_expiry, generate_access_code
+from django.core.mail import send_mail
 from django.utils.http import urlsafe_base64_decode
 
 @login_required
@@ -136,20 +137,35 @@ def signup(request):
             messages.error(request, e)
             return redirect('signup')
 
-        # Create a new user using object.create
+        # Ensure that the email and username are unique
+        if NewUser.objects.filter(email=email).exists() or NewUser.objects.filter(username=username).exists():
+            messages.error(request, 'Email or username already exists.')
+            return redirect('signup')
+
+        access_code = generate_access_code()
+
+        # Create a new user
         user = NewUser.objects.create_user(email=email, username=username, password=password)
         user.givenname = givenname
         user.surname = surname
-
         user.is_verified = False
         user.is_active = True
         user.is_personal = True
+        user.access_code = access_code
 
         user.save()
 
-        # Log in the new user
+        # Send an email to the user
+        send_mail(
+            'Account Registration',
+            f'Thank you for registering! Your access code is: {access_code}',
+            'EIMS@cyberassignment.com',
+            [email],
+            fail_silently=False,
+        )
+
         login(request, user)
-        messages.success(request, 'Signup successful!')
+        messages.success(request, 'Signup successful! An email has been sent with your access code.')
         return redirect('dashboard')
 
     return render(request, 'accounts/up.html')
