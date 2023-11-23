@@ -127,7 +127,7 @@ class NewUser(AbstractBaseUser, PermissionsMixin):
                 raise ValidationError("Cannot use the same password as one of the last 10 passwords.")
 
 
-    expiration_days = 90  # Adjust this based on your requirements
+    expiration_days = 90 
 
     @property
     def days_until_password_expires(self):

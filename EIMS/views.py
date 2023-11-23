@@ -28,7 +28,7 @@ from django.template.loader import render_to_string
 from django.conf import settings
 from django.utils.encoding import force_str
 from django.contrib.auth.tokens import default_token_generator
-# from django.utils.encoding import force_str
+from .decorators import check_password_expiry
 from django.utils.http import urlsafe_base64_decode
 
 @login_required
@@ -229,6 +229,7 @@ def otp_verification(request):
     return render(request, 'accounts/otp_verification.html')
 
 @login_required
+@check_password_expiry
 def dashboard(request):
     user = request.user
 

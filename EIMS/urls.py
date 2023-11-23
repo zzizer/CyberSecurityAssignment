@@ -6,7 +6,6 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
     path('signin', views.signin, name='signin'),
     path('signup', views.signup, name='signup'),
-    # path('password_reset', views.password_reset, name='password_reset'),
     path('', views.dashboard, name='dashboard'),
     path('profile-of-/<str:id>/', views.profile, name='profile'),
     path('specific-expenditure/<str:pk>/', ExpenditureinDetail.as_view(), name = 'exp-details'),
